@@ -223,6 +223,106 @@
             color: white;
         }
 
+        .btn-prestige {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-prestige:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .prestige-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 3px solid #ffd700;
+        }
+
+        .prestige-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .prestige-stat {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .prestige-stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .prestige-stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d4af37;
+        }
+
+        .prestige-upgrade {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #ffd700;
+        }
+
+        .prestige-upgrade:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .prestige-upgrade.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            border-color: #ccc;
+        }
+
+        .prestige-upgrade.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .prestige-upgrade-cost {
+            background: #d4af37;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .prestige-upgrade.disabled .prestige-upgrade-cost {
+            background: #ccc;
+        }
+
+        .prestige-level {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 2px solid #d4af37;
+        }
+
         @media (max-width: 768px) {
             .game-container {
                 grid-template-columns: 1fr;
@@ -260,12 +360,43 @@
                     <div class="stat-label">Per Click</div>
                     <div class="stat-value" id="cookiesPerClick">1</div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-label">Prestige Bonus</div>
+                    <div class="stat-value" id="prestigeBonus">+0%</div>
+                </div>
             </div>
             <button class="cookie-button" id="cookieBtn">🍪</button>
         </div>
 
         <div class="right-panel">
-            <h1>🍪 Cookie Empire</h1>
+            <h1>🍪 Cookie Empire<span class="prestige-level" id="prestigeLevelDisplay">Prestige 0</span></h1>
+
+            <div class="prestige-section">
+                <h2>⭐ Prestige</h2>
+                <div class="prestige-info">
+                    <div class="prestige-stat">
+                        <div class="prestige-stat-label">Prestige Points</div>
+                        <div class="prestige-stat-value" id="prestigePoints">0</div>
+                    </div>
+                    <div class="prestige-stat">
+                        <div class="prestige-stat-label">Prestige on Reset</div>
+                        <div class="prestige-stat-value" id="prestigeOnReset">0</div>
+                    </div>
+                    <div class="prestige-stat">
+                        <div class="prestige-stat-label">Lifetime Cookies</div>
+                        <div class="prestige-stat-value" id="lifetimeCookies">0</div>
+                    </div>
+                    <div class="prestige-stat">
+                        <div class="prestige-stat-label">Total Prestiges</div>
+                        <div class="prestige-stat-value" id="prestigeCount">0</div>
+                    </div>
+                </div>
+                <button class="btn btn-prestige" id="prestigeBtn" onclick="prestige()">
+                    PRESTIGE - Reset for permanent bonuses!
+                </button>
+                <div id="prestigeUpgrades" style="margin-top: 15px;"></div>
+            </div>
+
             <h2>Upgrades</h2>
             <div id="upgrades"></div>
             <div class="controls">
@@ -281,7 +412,12 @@
             cookies: 0,
             cookiesPerClick: 1,
             cookiesPerSecond: 0,
-            upgrades: {}
+            upgrades: {},
+            prestigeLevel: 0,
+            prestigePoints: 0,
+            lifetimeCookies: 0,
+            totalPrestiges: 0,
+            prestigeUpgrades: {}
         };
 
         // Upgrade definitions
@@ -352,14 +488,72 @@
             }
         ];
 
+        // Prestige upgrade definitions
+        const prestigeUpgradeDefinitions = [
+            {
+                id: 'clickBoost',
+                name: '✨ Click Mastery',
+                description: '+5% cookie production per level',
+                baseCost: 1,
+                costMultiplier: 2,
+                maxLevel: 50,
+                effect: (level) => level * 0.05
+            },
+            {
+                id: 'productionBoost',
+                name: '🚀 Production Accelerator',
+                description: '+10% cookie production per level',
+                baseCost: 5,
+                costMultiplier: 2.5,
+                maxLevel: 30,
+                effect: (level) => level * 0.10
+            },
+            {
+                id: 'megaBoost',
+                name: '💎 Mega Multiplier',
+                description: '+25% cookie production per level',
+                baseCost: 20,
+                costMultiplier: 3,
+                maxLevel: 20,
+                effect: (level) => level * 0.25
+            },
+            {
+                id: 'ultraBoost',
+                name: '🌟 Ultra Power',
+                description: '+50% cookie production per level',
+                baseCost: 50,
+                costMultiplier: 4,
+                maxLevel: 10,
+                effect: (level) => level * 0.50
+            },
+            {
+                id: 'godMode',
+                name: '👑 Divine Blessing',
+                description: '+100% cookie production per level',
+                baseCost: 100,
+                costMultiplier: 5,
+                maxLevel: 5,
+                effect: (level) => level * 1.00
+            }
+        ];
+
         // Initialize upgrade counts
         upgradeDefinitions.forEach(upgrade => {
             gameState.upgrades[upgrade.id] = 0;
         });
 
+        // Initialize prestige upgrade counts
+        prestigeUpgradeDefinitions.forEach(upgrade => {
+            if (gameState.prestigeUpgrades[upgrade.id] === undefined) {
+                gameState.prestigeUpgrades[upgrade.id] = 0;
+            }
+        });
+
         // Cookie click handler
         document.getElementById('cookieBtn').addEventListener('click', (e) => {
-            gameState.cookies += gameState.cookiesPerClick;
+            const earned = gameState.cookiesPerClick;
+            gameState.cookies += earned;
+            gameState.lifetimeCookies += earned;
             updateDisplay();
             showClickEffect(e);
         });
@@ -375,6 +569,16 @@
             setTimeout(() => effect.remove(), 1000);
         }
 
+        // Calculate prestige multiplier
+        function getPrestigeMultiplier() {
+            let multiplier = 0;
+            prestigeUpgradeDefinitions.forEach(upgrade => {
+                const level = gameState.prestigeUpgrades[upgrade.id] || 0;
+                multiplier += upgrade.effect(level);
+            });
+            return 1 + multiplier;
+        }
+
         // Calculate current stats
         function calculateStats() {
             let totalPerClick = 1;
@@ -386,6 +590,11 @@
                 if (effect.cookiesPerClick) totalPerClick += effect.cookiesPerClick;
                 if (effect.cookiesPerSecond) totalPerSecond += effect.cookiesPerSecond;
             });
+
+            // Apply prestige multiplier
+            const prestigeMultiplier = getPrestigeMultiplier();
+            totalPerClick *= prestigeMultiplier;
+            totalPerSecond *= prestigeMultiplier;
 
             gameState.cookiesPerClick = totalPerClick;
             gameState.cookiesPerSecond = totalPerSecond;
@@ -410,6 +619,69 @@
             }
         }
 
+        // Calculate prestige points based on lifetime cookies
+        function calculatePrestigePoints(lifetimeCookies) {
+            // Formula: cube root of (lifetime cookies / 1 trillion)
+            // This gives 1 prestige point per trillion cookies, scaling with cube root
+            return Math.floor(Math.pow(lifetimeCookies / 1000000000000, 1/3) * 10);
+        }
+
+        // Get prestige upgrade cost
+        function getPrestigeUpgradeCost(upgrade) {
+            const level = gameState.prestigeUpgrades[upgrade.id] || 0;
+            return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, level));
+        }
+
+        // Buy prestige upgrade
+        function buyPrestigeUpgrade(upgradeId) {
+            const upgrade = prestigeUpgradeDefinitions.find(u => u.id === upgradeId);
+            const cost = getPrestigeUpgradeCost(upgrade);
+            const currentLevel = gameState.prestigeUpgrades[upgradeId] || 0;
+
+            if (gameState.prestigePoints >= cost && currentLevel < upgrade.maxLevel) {
+                gameState.prestigePoints -= cost;
+                gameState.prestigeUpgrades[upgradeId]++;
+                calculateStats();
+                updateDisplay();
+            }
+        }
+
+        // Prestige function
+        function prestige() {
+            const pointsGained = calculatePrestigePoints(gameState.lifetimeCookies);
+            const currentPoints = gameState.prestigePoints;
+
+            if (pointsGained <= currentPoints) {
+                alert('You need to earn more cookies before you can prestige again!\n\nYou currently have ' + currentPoints + ' prestige points.\nYou would gain ' + pointsGained + ' points if you prestiged now.');
+                return;
+            }
+
+            const confirmMsg = `Are you sure you want to PRESTIGE?\n\n` +
+                `You will gain ${pointsGained - currentPoints} new prestige points (total: ${pointsGained}).\n` +
+                `All cookies and upgrades will be reset, but prestige upgrades remain!\n` +
+                `Your prestige multiplier will boost future cookie production!`;
+
+            if (confirm(confirmMsg)) {
+                // Reset everything except prestige data
+                gameState.prestigePoints = pointsGained;
+                gameState.totalPrestiges++;
+                gameState.prestigeLevel++;
+                gameState.cookies = 0;
+                gameState.cookiesPerClick = 1;
+                gameState.cookiesPerSecond = 0;
+
+                // Reset all regular upgrades
+                upgradeDefinitions.forEach(upgrade => {
+                    gameState.upgrades[upgrade.id] = 0;
+                });
+
+                calculateStats();
+                updateDisplay();
+
+                alert('🎉 PRESTIGE COMPLETE! 🎉\n\nYou gained ' + (pointsGained - currentPoints) + ' prestige points!\nUse them wisely on prestige upgrades for permanent bonuses!');
+            }
+        }
+
         // Format large numbers
         function formatNumber(num) {
             if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
@@ -421,10 +693,66 @@
 
         // Update display
         function updateDisplay() {
+            // Update main stats
             document.getElementById('cookieCount').textContent = formatNumber(gameState.cookies);
             document.getElementById('cookiesPerSecond').textContent = formatNumber(gameState.cookiesPerSecond);
             document.getElementById('cookiesPerClick').textContent = formatNumber(gameState.cookiesPerClick);
 
+            // Update prestige bonus display
+            const prestigeMultiplier = getPrestigeMultiplier();
+            const bonusPercent = ((prestigeMultiplier - 1) * 100).toFixed(0);
+            document.getElementById('prestigeBonus').textContent = '+' + bonusPercent + '%';
+
+            // Update prestige stats
+            document.getElementById('prestigePoints').textContent = formatNumber(gameState.prestigePoints);
+            document.getElementById('lifetimeCookies').textContent = formatNumber(gameState.lifetimeCookies);
+            document.getElementById('prestigeCount').textContent = gameState.totalPrestiges;
+            document.getElementById('prestigeLevelDisplay').textContent = 'Prestige ' + gameState.prestigeLevel;
+
+            // Calculate and display potential prestige points
+            const potentialPrestigePoints = calculatePrestigePoints(gameState.lifetimeCookies);
+            const prestigeGain = Math.max(0, potentialPrestigePoints - gameState.prestigePoints);
+            document.getElementById('prestigeOnReset').textContent = '+' + prestigeGain;
+
+            // Enable/disable prestige button
+            const prestigeBtn = document.getElementById('prestigeBtn');
+            if (prestigeGain > 0) {
+                prestigeBtn.disabled = false;
+                prestigeBtn.textContent = `PRESTIGE - Gain ${prestigeGain} points!`;
+            } else {
+                prestigeBtn.disabled = true;
+                prestigeBtn.textContent = 'PRESTIGE - Need more cookies!';
+            }
+
+            // Update prestige upgrades
+            const prestigeUpgradesContainer = document.getElementById('prestigeUpgrades');
+            prestigeUpgradesContainer.innerHTML = '';
+
+            prestigeUpgradeDefinitions.forEach(upgrade => {
+                const cost = getPrestigeUpgradeCost(upgrade);
+                const level = gameState.prestigeUpgrades[upgrade.id] || 0;
+                const canAfford = gameState.prestigePoints >= cost && level < upgrade.maxLevel;
+                const isMaxLevel = level >= upgrade.maxLevel;
+
+                const upgradeElement = document.createElement('div');
+                upgradeElement.className = 'prestige-upgrade' + (canAfford ? '' : ' disabled');
+                upgradeElement.onclick = canAfford ? () => buyPrestigeUpgrade(upgrade.id) : null;
+
+                const costDisplay = isMaxLevel ? 'MAX' : formatNumber(cost) + ' ⭐';
+
+                upgradeElement.innerHTML = `
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">${upgrade.name}</div>
+                        <div class="upgrade-description">${upgrade.description}</div>
+                        <div class="upgrade-count">Level: ${level}/${upgrade.maxLevel} (${(upgrade.effect(level) * 100).toFixed(0)}% bonus)</div>
+                    </div>
+                    <div class="prestige-upgrade-cost">${costDisplay}</div>
+                `;
+
+                prestigeUpgradesContainer.appendChild(upgradeElement);
+            });
+
+            // Update regular upgrades
             const upgradesContainer = document.getElementById('upgrades');
             upgradesContainer.innerHTML = '';
 
@@ -452,7 +780,9 @@
 
         // Auto-generate cookies
         setInterval(() => {
-            gameState.cookies += gameState.cookiesPerSecond / 10;
+            const earned = gameState.cookiesPerSecond / 10;
+            gameState.cookies += earned;
+            gameState.lifetimeCookies += earned;
             updateDisplay();
         }, 100);
 
@@ -466,7 +796,35 @@
         function loadGame() {
             const saved = localStorage.getItem('cookieGame');
             if (saved) {
-                gameState = JSON.parse(saved);
+                const loadedState = JSON.parse(saved);
+
+                // Merge with default state for backward compatibility
+                gameState = {
+                    cookies: loadedState.cookies || 0,
+                    cookiesPerClick: loadedState.cookiesPerClick || 1,
+                    cookiesPerSecond: loadedState.cookiesPerSecond || 0,
+                    upgrades: loadedState.upgrades || {},
+                    prestigeLevel: loadedState.prestigeLevel || 0,
+                    prestigePoints: loadedState.prestigePoints || 0,
+                    lifetimeCookies: loadedState.lifetimeCookies || 0,
+                    totalPrestiges: loadedState.totalPrestiges || 0,
+                    prestigeUpgrades: loadedState.prestigeUpgrades || {}
+                };
+
+                // Ensure all upgrade counts exist
+                upgradeDefinitions.forEach(upgrade => {
+                    if (gameState.upgrades[upgrade.id] === undefined) {
+                        gameState.upgrades[upgrade.id] = 0;
+                    }
+                });
+
+                // Ensure all prestige upgrade counts exist
+                prestigeUpgradeDefinitions.forEach(upgrade => {
+                    if (gameState.prestigeUpgrades[upgrade.id] === undefined) {
+                        gameState.prestigeUpgrades[upgrade.id] = 0;
+                    }
+                });
+
                 calculateStats();
                 updateDisplay();
             }
@@ -474,17 +832,26 @@
 
         // Reset game
         function resetGame() {
-            if (confirm('Are you sure you want to reset your progress?')) {
+            if (confirm('Are you sure you want to COMPLETELY reset your progress?\n\nThis will erase EVERYTHING including prestige data!')) {
                 gameState = {
                     cookies: 0,
                     cookiesPerClick: 1,
                     cookiesPerSecond: 0,
-                    upgrades: {}
+                    upgrades: {},
+                    prestigeLevel: 0,
+                    prestigePoints: 0,
+                    lifetimeCookies: 0,
+                    totalPrestiges: 0,
+                    prestigeUpgrades: {}
                 };
                 upgradeDefinitions.forEach(upgrade => {
                     gameState.upgrades[upgrade.id] = 0;
                 });
+                prestigeUpgradeDefinitions.forEach(upgrade => {
+                    gameState.prestigeUpgrades[upgrade.id] = 0;
+                });
                 localStorage.removeItem('cookieGame');
+                calculateStats();
                 updateDisplay();
             }
         }
