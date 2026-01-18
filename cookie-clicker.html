@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Empire - Incremental Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            padding: 40px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stats {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .cookie-button {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
+            font-size: 80px;
+            position: relative;
+        }
+
+        .cookie-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(245, 87, 108, 0.5);
+        }
+
+        .cookie-button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .click-effect {
+            position: absolute;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            animation: float-up 1s ease-out forwards;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        .right-panel {
+            padding: 40px;
+            background: white;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .upgrade {
+            background: #f5f7fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .upgrade:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .upgrade.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .upgrade.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .upgrade-info {
+            flex: 1;
+        }
+
+        .upgrade-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .upgrade-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .upgrade-count {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .upgrade-cost {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .upgrade.disabled .upgrade-cost {
+            background: #ccc;
+        }
+
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-save {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #f56565;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+
+            .left-panel {
+                padding: 20px;
+            }
+
+            .cookie-button {
+                width: 200px;
+                height: 200px;
+                font-size: 60px;
+            }
+
+            .right-panel {
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="left-panel">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total Cookies</div>
+                    <div class="stat-value" id="cookieCount">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Per Second</div>
+                    <div class="stat-value" id="cookiesPerSecond">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Per Click</div>
+                    <div class="stat-value" id="cookiesPerClick">1</div>
+                </div>
+            </div>
+            <button class="cookie-button" id="cookieBtn">🍪</button>
+        </div>
+
+        <div class="right-panel">
+            <h1>🍪 Cookie Empire</h1>
+            <h2>Upgrades</h2>
+            <div id="upgrades"></div>
+            <div class="controls">
+                <button class="btn btn-save" onclick="saveGame()">Save Game</button>
+                <button class="btn btn-reset" onclick="resetGame()">Reset Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            cookies: 0,
+            cookiesPerClick: 1,
+            cookiesPerSecond: 0,
+            upgrades: {}
+        };
+
+        // Upgrade definitions
+        const upgradeDefinitions = [
+            {
+                id: 'cursor',
+                name: '🖱️ Better Cursor',
+                description: 'Gain +1 cookie per click',
+                baseCost: 10,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerClick: count })
+            },
+            {
+                id: 'grandma',
+                name: '👵 Grandma',
+                description: 'Generates 1 cookie per second',
+                baseCost: 100,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 1 })
+            },
+            {
+                id: 'farm',
+                name: '🌾 Cookie Farm',
+                description: 'Generates 5 cookies per second',
+                baseCost: 500,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 5 })
+            },
+            {
+                id: 'factory',
+                name: '🏭 Cookie Factory',
+                description: 'Generates 20 cookies per second',
+                baseCost: 2000,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 20 })
+            },
+            {
+                id: 'mine',
+                name: '⛏️ Cookie Mine',
+                description: 'Generates 50 cookies per second',
+                baseCost: 10000,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 50 })
+            },
+            {
+                id: 'wizard',
+                name: '🧙 Cookie Wizard',
+                description: 'Generates 100 cookies per second',
+                baseCost: 50000,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 100 })
+            },
+            {
+                id: 'portal',
+                name: '🌀 Cookie Portal',
+                description: 'Generates 500 cookies per second',
+                baseCost: 250000,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 500 })
+            },
+            {
+                id: 'timemachine',
+                name: '⏰ Time Machine',
+                description: 'Generates 2000 cookies per second',
+                baseCost: 1000000,
+                costMultiplier: 1.15,
+                effect: (count) => ({ cookiesPerSecond: count * 2000 })
+            }
+        ];
+
+        // Initialize upgrade counts
+        upgradeDefinitions.forEach(upgrade => {
+            gameState.upgrades[upgrade.id] = 0;
+        });
+
+        // Cookie click handler
+        document.getElementById('cookieBtn').addEventListener('click', (e) => {
+            gameState.cookies += gameState.cookiesPerClick;
+            updateDisplay();
+            showClickEffect(e);
+        });
+
+        // Show floating number effect
+        function showClickEffect(e) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.textContent = '+' + formatNumber(gameState.cookiesPerClick);
+            effect.style.left = e.offsetX + 'px';
+            effect.style.top = e.offsetY + 'px';
+            e.target.appendChild(effect);
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        // Calculate current stats
+        function calculateStats() {
+            let totalPerClick = 1;
+            let totalPerSecond = 0;
+
+            upgradeDefinitions.forEach(upgrade => {
+                const count = gameState.upgrades[upgrade.id];
+                const effect = upgrade.effect(count);
+                if (effect.cookiesPerClick) totalPerClick += effect.cookiesPerClick;
+                if (effect.cookiesPerSecond) totalPerSecond += effect.cookiesPerSecond;
+            });
+
+            gameState.cookiesPerClick = totalPerClick;
+            gameState.cookiesPerSecond = totalPerSecond;
+        }
+
+        // Calculate upgrade cost
+        function getUpgradeCost(upgrade) {
+            const count = gameState.upgrades[upgrade.id];
+            return Math.floor(upgrade.baseCost * Math.pow(upgrade.costMultiplier, count));
+        }
+
+        // Buy upgrade
+        function buyUpgrade(upgradeId) {
+            const upgrade = upgradeDefinitions.find(u => u.id === upgradeId);
+            const cost = getUpgradeCost(upgrade);
+
+            if (gameState.cookies >= cost) {
+                gameState.cookies -= cost;
+                gameState.upgrades[upgradeId]++;
+                calculateStats();
+                updateDisplay();
+            }
+        }
+
+        // Format large numbers
+        function formatNumber(num) {
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(2) + 'K';
+            return Math.floor(num).toString();
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('cookieCount').textContent = formatNumber(gameState.cookies);
+            document.getElementById('cookiesPerSecond').textContent = formatNumber(gameState.cookiesPerSecond);
+            document.getElementById('cookiesPerClick').textContent = formatNumber(gameState.cookiesPerClick);
+
+            const upgradesContainer = document.getElementById('upgrades');
+            upgradesContainer.innerHTML = '';
+
+            upgradeDefinitions.forEach(upgrade => {
+                const cost = getUpgradeCost(upgrade);
+                const count = gameState.upgrades[upgrade.id];
+                const canAfford = gameState.cookies >= cost;
+
+                const upgradeElement = document.createElement('div');
+                upgradeElement.className = 'upgrade' + (canAfford ? '' : ' disabled');
+                upgradeElement.onclick = canAfford ? () => buyUpgrade(upgrade.id) : null;
+
+                upgradeElement.innerHTML = `
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">${upgrade.name}</div>
+                        <div class="upgrade-description">${upgrade.description}</div>
+                        <div class="upgrade-count">Owned: ${count}</div>
+                    </div>
+                    <div class="upgrade-cost">${formatNumber(cost)} 🍪</div>
+                `;
+
+                upgradesContainer.appendChild(upgradeElement);
+            });
+        }
+
+        // Auto-generate cookies
+        setInterval(() => {
+            gameState.cookies += gameState.cookiesPerSecond / 10;
+            updateDisplay();
+        }, 100);
+
+        // Save game
+        function saveGame() {
+            localStorage.setItem('cookieGame', JSON.stringify(gameState));
+            alert('Game saved!');
+        }
+
+        // Load game
+        function loadGame() {
+            const saved = localStorage.getItem('cookieGame');
+            if (saved) {
+                gameState = JSON.parse(saved);
+                calculateStats();
+                updateDisplay();
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            if (confirm('Are you sure you want to reset your progress?')) {
+                gameState = {
+                    cookies: 0,
+                    cookiesPerClick: 1,
+                    cookiesPerSecond: 0,
+                    upgrades: {}
+                };
+                upgradeDefinitions.forEach(upgrade => {
+                    gameState.upgrades[upgrade.id] = 0;
+                });
+                localStorage.removeItem('cookieGame');
+                updateDisplay();
+            }
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(saveGame, 30000);
+
+        // Initialize
+        loadGame();
+        updateDisplay();
+    </script>
+</body>
+</html>
