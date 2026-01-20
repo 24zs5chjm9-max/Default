@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potato Fondant Recipe - Pommes Fondantes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #d4a373;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        .recipe-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .info-item {
+            text-align: center;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #d4a373;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-top: 5px;
+        }
+
+        h2 {
+            color: #d4a373;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+            border-left: 5px solid #d4a373;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #34495e;
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .ingredients {
+            background: #fff8f0;
+            padding: 25px;
+            border-radius: 8px;
+            border: 2px solid #d4a373;
+        }
+
+        ul {
+            list-style-position: inside;
+            margin-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+            padding-left: 10px;
+        }
+
+        .instructions ol {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .instructions li {
+            counter-increment: step-counter;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 5px solid #d4a373;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: "Step " counter(step-counter);
+            display: block;
+            font-weight: bold;
+            color: #d4a373;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tip {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .tip strong {
+            color: #2e7d32;
+        }
+
+        .warning {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning strong {
+            color: #e65100;
+        }
+
+        .notes {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 2px solid #2196f3;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🥔 Potato Fondant</h1>
+            <p class="subtitle">Pommes Fondantes - A Classic French Side Dish</p>
+        </header>
+
+        <div class="recipe-info">
+            <div class="info-item">
+                <div class="info-label">Prep Time</div>
+                <div class="info-value">15 mins</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Cook Time</div>
+                <div class="info-value">45 mins</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Total Time</div>
+                <div class="info-value">1 hour</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Servings</div>
+                <div class="info-value">4-6</div>
+            </div>
+        </div>
+
+        <section class="description">
+            <p>Fondant potatoes (pommes fondantes) are a stunning French side dish featuring perfectly cylindrical potatoes that are golden and crispy on the outside, while being incredibly creamy and tender on the inside. The potatoes are first seared in butter and oil, then finished in the oven while basting in a flavorful mixture of stock, butter, herbs, and garlic. The result is a potato that melts in your mouth - hence the name "fondant" which means "melting" in French.</p>
+        </section>
+
+        <section>
+            <h2>Ingredients</h2>
+            <div class="ingredients">
+                <h3>Main Ingredients:</h3>
+                <ul>
+                    <li><strong>4-6 large russet potatoes</strong> (or Yukon Gold potatoes, each about 8-10 oz)</li>
+                    <li><strong>3 tablespoons olive oil</strong> (or vegetable oil)</li>
+                    <li><strong>4 tablespoons butter</strong> (divided)</li>
+                    <li><strong>1½ cups chicken stock</strong> (or vegetable stock)</li>
+                    <li><strong>4-6 cloves garlic</strong> (peeled and lightly smashed)</li>
+                    <li><strong>4-6 sprigs fresh thyme</strong></li>
+                    <li><strong>Salt and freshly ground black pepper</strong> to taste</li>
+                </ul>
+
+                <h3>Optional Additions:</h3>
+                <ul>
+                    <li>2 sprigs fresh rosemary</li>
+                    <li>2 bay leaves</li>
+                    <li>1 tablespoon fresh lemon juice</li>
+                    <li>Fresh parsley for garnish</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="instructions">
+            <h2>Instructions</h2>
+            <ol>
+                <li>
+                    <strong>Preheat the Oven:</strong> Preheat your oven to 400°F (200°C). This ensures the oven is at the right temperature when you're ready to transfer the potatoes.
+                </li>
+
+                <li>
+                    <strong>Prepare the Potatoes:</strong> Peel all the potatoes. Cut off the ends (about ½ inch from each end) to create flat surfaces. Then cut each potato into cylinders approximately 2 inches (5 cm) tall. Try to make them as uniform as possible for even cooking. Each large potato should yield 2-3 cylinders.
+                    <div class="tip">
+                        <strong>💡 Pro Tip:</strong> Use a round cookie cutter to make perfectly uniform cylinders if you want a very professional presentation. Save the potato scraps for mashed potatoes or hash browns!
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Soak the Potatoes (Optional but Recommended):</strong> Place the potato cylinders in a large bowl and cover with cold water. Let them soak for 20 minutes. This removes excess starch and helps achieve a better crust. After soaking, drain and pat completely dry with paper towels or a clean kitchen towel. The potatoes must be very dry for proper browning.
+                </li>
+
+                <li>
+                    <strong>Season the Potatoes:</strong> Generously season both flat ends of each potato cylinder with salt and freshly ground black pepper.
+                </li>
+
+                <li>
+                    <strong>Sear the Potatoes - First Side:</strong> Heat the olive oil in a large oven-safe skillet (cast iron works beautifully) over medium-high heat. Once the oil is shimmering hot, carefully place the potato cylinders in the pan, standing upright (one flat side down). They should fit snugly without crowding. Sear without moving for 6-8 minutes until deeply golden brown.
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> Don't move the potatoes while they're searing! They need time to develop that golden crust. If you move them too early, they'll stick and tear.
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Sear the Potatoes - Second Side:</strong> Carefully flip each potato cylinder to the other flat side. Sear for another 6-8 minutes until equally golden brown. Reduce heat to medium if they're browning too quickly.
+                </li>
+
+                <li>
+                    <strong>Add Butter and Aromatics:</strong> Reduce the heat to medium. Add 2 tablespoons of butter, the smashed garlic cloves, and fresh thyme sprigs to the pan. Let the butter melt and foam. Tilt the pan slightly and use a spoon to baste the potatoes with the butter mixture for about 1-2 minutes. This infuses incredible flavor into the potatoes.
+                </li>
+
+                <li>
+                    <strong>Add Stock:</strong> Carefully pour the chicken stock into the pan around (not over) the potatoes. The stock should come about halfway up the sides of the potatoes. Add the remaining 2 tablespoons of butter, cut into small pieces, distributing them around the pan. Season the stock with a little more salt and pepper.
+                </li>
+
+                <li>
+                    <strong>Transfer to Oven:</strong> Immediately transfer the skillet to the preheated oven. Roast for 30-35 minutes, basting the potatoes with the pan liquid every 10 minutes. The potatoes are done when they're tender when pierced with a knife, and the stock has reduced to a glossy, butter-enriched sauce.
+                    <div class="tip">
+                        <strong>💡 Basting Tip:</strong> Use a large spoon to drizzle the buttery stock over the tops of the potatoes each time you baste. This keeps them moist and builds flavor.
+                    </div>
+                </li>
+
+                <li>
+                    <strong>Rest and Serve:</strong> Remove from the oven and let rest for 2-3 minutes. Discard the garlic cloves and thyme sprigs (they've given their flavor). Transfer the potatoes to a serving platter, spooning the remaining pan sauce over them. Garnish with fresh parsley if desired.
+                </li>
+            </ol>
+        </section>
+
+        <section class="notes">
+            <h2>Chef's Notes & Tips</h2>
+
+            <h3>Potato Selection:</h3>
+            <p><strong>Russet potatoes</strong> are ideal because they're starchy and become incredibly creamy inside. <strong>Yukon Gold</strong> potatoes also work well and have a naturally buttery flavor. Avoid waxy potatoes like red potatoes or fingerlings - they won't achieve the right texture.</p>
+
+            <h3>Pan Selection:</h3>
+            <p>Use an oven-safe skillet that can accommodate all potatoes in a single layer. Cast iron is perfect as it maintains heat well and transfers beautifully from stovetop to oven. Make sure your skillet can fit comfortably in your oven!</p>
+
+            <h3>Stock Choice:</h3>
+            <p>Chicken stock provides rich flavor, but vegetable stock works perfectly for a vegetarian version. You can even use beef stock for a deeper flavor when serving alongside red meat. Avoid using low-sodium stock - you want full flavor.</p>
+
+            <h3>Troubleshooting:</h3>
+            <ul>
+                <li><strong>Potatoes sticking to the pan:</strong> Make sure your oil is hot enough before adding potatoes, and ensure they're completely dry.</li>
+                <li><strong>Uneven browning:</strong> Gently rotate potatoes in the pan as needed, but minimize movement once they're set.</li>
+                <li><strong>Sauce too thin:</strong> Continue cooking on the stovetop after removing potatoes, reducing until glossy.</li>
+                <li><strong>Sauce too thick or burning:</strong> Add a splash more stock during the oven cooking process.</li>
+            </ul>
+
+            <h3>Make-Ahead Option:</h3>
+            <p>You can sear the potatoes up to 2 hours ahead. When ready to serve, proceed with the oven-roasting step, adding an extra 5 minutes to the cooking time.</p>
+
+            <h3>Serving Suggestions:</h3>
+            <p>Fondant potatoes are the perfect elegant side dish for special occasions. They pair beautifully with:</p>
+            <ul>
+                <li>Roasted beef tenderloin or prime rib</li>
+                <li>Pan-seared steak or lamb chops</li>
+                <li>Roasted chicken or duck</li>
+                <li>Pan-fried fish or scallops</li>
+                <li>Vegetarian main courses like mushroom wellington</li>
+            </ul>
+
+            <h3>Variations:</h3>
+            <ul>
+                <li><strong>Herb Variations:</strong> Try rosemary instead of thyme, or use a combination of both.</li>
+                <li><strong>Add Lemon:</strong> Squeeze fresh lemon juice over the finished potatoes for brightness.</li>
+                <li><strong>Truffle Version:</strong> Drizzle with truffle oil just before serving for luxury.</li>
+                <li><strong>Parmesan Crust:</strong> Sprinkle grated Parmesan on top during the last 5 minutes of baking.</li>
+            </ul>
+        </section>
+
+        <section class="notes" style="background: #fce4ec; border-color: #e91e63;">
+            <h2>Why This Recipe Works</h2>
+            <p><strong>The Science Behind Fondant Potatoes:</strong></p>
+            <ul>
+                <li><strong>Soaking:</strong> Removing surface starch helps achieve better browning through the Maillard reaction.</li>
+                <li><strong>Double-Searing:</strong> Creates a golden crust on both ends while keeping the sides tender.</li>
+                <li><strong>Butter + Oil:</strong> Oil has a higher smoke point for searing, while butter adds rich flavor.</li>
+                <li><strong>Stock Braising:</strong> The combination of dry heat (oven) and moist heat (stock) creates the signature creamy interior while the exposed tops stay crispy.</li>
+                <li><strong>Basting:</strong> Regular basting coats the potatoes in flavorful fat, building layers of taste and preventing drying.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p><strong>Bon Appétit!</strong></p>
+            <p>This classic French technique elevates simple potatoes into a restaurant-worthy dish.</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Recipe information compiled from multiple culinary sources • 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
