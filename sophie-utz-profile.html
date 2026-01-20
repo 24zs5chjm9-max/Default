@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophie Utz - Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #533483);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 60px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+
+        .profile-name {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #e94560, #533483);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-title {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .profile-location {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .profile-location::before {
+            content: "📍 ";
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #e94560;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(233, 69, 96, 0.3);
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 3px solid #533483;
+        }
+
+        .experience-item:last-child, .education-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .item-title {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .item-company, .item-institution {
+            color: #e94560;
+            font-weight: 500;
+        }
+
+        .item-details {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .practice-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .practice-tag {
+            background: linear-gradient(135deg, #e94560, #533483);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .achievement-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .achievement-text {
+            color: #cbd5e1;
+        }
+
+        .achievement-text strong {
+            color: #fff;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(135deg, #e94560, #533483);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 600px) {
+            .profile-name {
+                font-size: 1.8rem;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .practice-areas {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="profile-header">
+            <div class="profile-avatar">SU</div>
+            <h1 class="profile-name">Sophie Utz</h1>
+            <p class="profile-title">Senior Associate - Banking & Finance | ESG & Responsible Business</p>
+            <p class="profile-location">Sydney, NSW, Australia</p>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/sophie-utz-a0617063/" target="_blank" class="social-link" title="LinkedIn">in</a>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">About</h2>
+            <p style="color: #cbd5e1;">
+                Sophie Utz is an accomplished legal professional based in Sydney, specialising in Banking & Finance
+                and ESG (Environmental, Social, and Governance) & Responsible Business law. With a strong educational
+                foundation from the University of Sydney and advanced business studies at Oxford, Sophie brings both
+                legal expertise and business acumen to her practice. Beyond her legal career, she is known for
+                co-founding Australia's first intercollegiate polo program, demonstrating leadership and initiative
+                in both professional and extracurricular pursuits.
+            </p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Practice Areas</h2>
+            <div class="practice-areas">
+                <span class="practice-tag">Banking & Finance</span>
+                <span class="practice-tag">ESG</span>
+                <span class="practice-tag">Responsible Business</span>
+                <span class="practice-tag">Corporate Law</span>
+                <span class="practice-tag">Government Services</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="experience-item">
+                <p class="item-title">Senior Associate</p>
+                <p class="item-company">Corrs Chambers Westgarth</p>
+                <p class="item-details">Banking & Finance | ESG & Responsible Business</p>
+            </div>
+            <div class="experience-item">
+                <p class="item-title">Senior Associate</p>
+                <p class="item-company">Clayton Utz</p>
+                <p class="item-details">Government Services Corporate Group</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <p class="item-title">MBA</p>
+                <p class="item-institution">University of Oxford - Said Business School</p>
+                <p class="item-details">One-year MBA program</p>
+            </div>
+            <div class="education-item">
+                <p class="item-title">Law Degree</p>
+                <p class="item-institution">University of Sydney</p>
+                <p class="item-details">Sydney, Australia</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Notable Achievements</h2>
+            <div class="achievement-item">
+                <span class="achievement-icon">🏇</span>
+                <p class="achievement-text">
+                    <strong>Co-Founder, University of Sydney Polo Society (2012)</strong><br>
+                    Established Australia's first and only intercollegiate polo program alongside Georgia Higgins.
+                    Founded on a long-standing tradition of the sport in Australia with a vision for integrating
+                    polo into Australian student life.
+                </p>
+            </div>
+            <div class="achievement-item">
+                <span class="achievement-icon">⚖️</span>
+                <p class="achievement-text">
+                    <strong>International Legal Networking</strong><br>
+                    Active participant in international legal events, including the "Lawyers Polo" event in Tuscany,
+                    combining professional networking with passion for equestrian sports.
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Interests</h2>
+            <div class="practice-areas">
+                <span class="practice-tag">Polo</span>
+                <span class="practice-tag">Equestrian Sports</span>
+                <span class="practice-tag">Sustainable Business</span>
+                <span class="practice-tag">International Law</span>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Profile compiled from publicly available information</p>
+            <p style="margin-top: 10px;">Sources: LinkedIn, University of Sydney Union</p>
+        </footer>
+    </div>
+</body>
+</html>
