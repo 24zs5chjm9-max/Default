@@ -90,6 +90,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .cell:hover:not(.taken) {
@@ -137,6 +141,10 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .new-game-btn {
@@ -306,10 +314,20 @@
         function init() {
             cells.forEach(cell => {
                 cell.addEventListener('click', handleCellClick);
+                cell.addEventListener('touchend', handleCellClick);
             });
             newGameBtn.addEventListener('click', resetGame);
+            newGameBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                resetGame();
+            });
             playerBtns.forEach(btn => {
-                btn.addEventListener('click', () => selectPlayer(btn.dataset.player));
+                const handler = (e) => {
+                    e.preventDefault();
+                    selectPlayer(btn.dataset.player);
+                };
+                btn.addEventListener('click', handler);
+                btn.addEventListener('touchend', handler);
             });
         }
 
@@ -344,9 +362,14 @@
             document.querySelector('.score:last-child .score-label').textContent = `AI (${aiPlayer})`;
         }
 
-        // Handle cell click
+        // Handle cell click/tap
         function handleCellClick(e) {
-            const index = parseInt(e.target.dataset.index);
+            e.preventDefault();
+            const cell = e.target.closest('.cell');
+            if (!cell) return;
+
+            const index = parseInt(cell.dataset.index);
+            if (isNaN(index)) return;
 
             if (board[index] !== '' || !gameActive || currentPlayer !== humanPlayer) {
                 return;
