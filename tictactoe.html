@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unbeatable Noughts and Crosses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: #e94560;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        .game-info {
+            margin-bottom: 20px;
+        }
+
+        .status {
+            color: #fff;
+            font-size: 1.4rem;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+            min-width: 250px;
+        }
+
+        .status.winner {
+            background: rgba(233, 69, 96, 0.3);
+            animation: pulse 1s infinite;
+        }
+
+        .status.draw {
+            background: rgba(255, 193, 7, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 350px;
+            margin: 0 auto 30px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            font-size: 4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cell:hover:not(.taken) {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .cell.taken {
+            cursor: not-allowed;
+        }
+
+        .cell.x {
+            color: #e94560;
+            text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+
+        .cell.o {
+            color: #00d9ff;
+            text-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .cell.winning {
+            animation: winPulse 0.5s ease infinite alternate;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        @keyframes winPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .new-game-btn {
+            background: #e94560;
+            color: white;
+        }
+
+        .new-game-btn:hover {
+            background: #ff6b6b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .difficulty-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .difficulty-btn.active {
+            background: #00d9ff;
+            color: #1a1a2e;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .score {
+            text-align: center;
+        }
+
+        .score-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .score-value.player {
+            color: #e94560;
+        }
+
+        .score-value.ai {
+            color: #00d9ff;
+        }
+
+        .score-value.draws {
+            color: #ffc107;
+        }
+
+        .player-select {
+            margin-bottom: 20px;
+        }
+
+        .player-select span {
+            color: #a0a0a0;
+            margin-right: 10px;
+        }
+
+        .player-btn {
+            padding: 8px 20px;
+            margin: 0 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .player-btn.active {
+            background: #e94560;
+        }
+
+        .player-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .thinking {
+            color: #00d9ff;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Noughts and Crosses</h1>
+        <p class="subtitle">Try to beat the unbeatable AI!</p>
+
+        <div class="score-board">
+            <div class="score">
+                <div class="score-label">You (X)</div>
+                <div class="score-value player" id="player-score">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">Draws</div>
+                <div class="score-value draws" id="draw-score">0</div>
+            </div>
+            <div class="score">
+                <div class="score-label">AI (O)</div>
+                <div class="score-value ai" id="ai-score">0</div>
+            </div>
+        </div>
+
+        <div class="player-select">
+            <span>Play as:</span>
+            <button class="player-btn active" data-player="X">X (First)</button>
+            <button class="player-btn" data-player="O">O (Second)</button>
+        </div>
+
+        <div class="game-info">
+            <div class="status" id="status">Your turn</div>
+        </div>
+
+        <div class="board" id="board">
+            <button class="cell" data-index="0"></button>
+            <button class="cell" data-index="1"></button>
+            <button class="cell" data-index="2"></button>
+            <button class="cell" data-index="3"></button>
+            <button class="cell" data-index="4"></button>
+            <button class="cell" data-index="5"></button>
+            <button class="cell" data-index="6"></button>
+            <button class="cell" data-index="7"></button>
+            <button class="cell" data-index="8"></button>
+        </div>
+
+        <div class="controls">
+            <button class="new-game-btn" id="new-game">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let humanPlayer = 'X';
+        let aiPlayer = 'O';
+        let scores = { player: 0, ai: 0, draws: 0 };
+
+        // Winning combinations
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
+
+        // DOM elements
+        const cells = document.querySelectorAll('.cell');
+        const statusDisplay = document.getElementById('status');
+        const newGameBtn = document.getElementById('new-game');
+        const playerBtns = document.querySelectorAll('.player-btn');
+
+        // Initialize game
+        function init() {
+            cells.forEach(cell => {
+                cell.addEventListener('click', handleCellClick);
+            });
+            newGameBtn.addEventListener('click', resetGame);
+            playerBtns.forEach(btn => {
+                btn.addEventListener('click', () => selectPlayer(btn.dataset.player));
+            });
+        }
+
+        // Select player (X or O)
+        function selectPlayer(player) {
+            if (!gameActive && board.every(cell => cell === '')) {
+                humanPlayer = player;
+                aiPlayer = player === 'X' ? 'O' : 'X';
+                playerBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.player === player);
+                });
+                updateScoreLabels();
+                resetGame();
+            } else if (board.every(cell => cell === '')) {
+                humanPlayer = player;
+                aiPlayer = player === 'X' ? 'O' : 'X';
+                playerBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.player === player);
+                });
+                updateScoreLabels();
+                if (humanPlayer === 'O') {
+                    currentPlayer = 'X';
+                    statusDisplay.textContent = 'AI is thinking...';
+                    statusDisplay.classList.add('thinking');
+                    setTimeout(makeAiMove, 500);
+                }
+            }
+        }
+
+        function updateScoreLabels() {
+            document.querySelector('.score:first-child .score-label').textContent = `You (${humanPlayer})`;
+            document.querySelector('.score:last-child .score-label').textContent = `AI (${aiPlayer})`;
+        }
+
+        // Handle cell click
+        function handleCellClick(e) {
+            const index = parseInt(e.target.dataset.index);
+
+            if (board[index] !== '' || !gameActive || currentPlayer !== humanPlayer) {
+                return;
+            }
+
+            makeMove(index, humanPlayer);
+
+            if (gameActive) {
+                currentPlayer = aiPlayer;
+                statusDisplay.textContent = 'AI is thinking...';
+                statusDisplay.classList.add('thinking');
+                setTimeout(makeAiMove, 500);
+            }
+        }
+
+        // Make a move
+        function makeMove(index, player) {
+            board[index] = player;
+            const cell = cells[index];
+            cell.textContent = player;
+            cell.classList.add('taken', player.toLowerCase());
+
+            const result = checkWinner();
+            if (result) {
+                gameActive = false;
+                if (result === 'draw') {
+                    statusDisplay.textContent = "It's a draw!";
+                    statusDisplay.classList.remove('thinking');
+                    statusDisplay.classList.add('draw');
+                    scores.draws++;
+                    document.getElementById('draw-score').textContent = scores.draws;
+                } else {
+                    highlightWinningCells(result.pattern);
+                    if (result.winner === humanPlayer) {
+                        statusDisplay.textContent = 'You win! (Impossible!)';
+                        scores.player++;
+                        document.getElementById('player-score').textContent = scores.player;
+                    } else {
+                        statusDisplay.textContent = 'AI wins!';
+                        scores.ai++;
+                        document.getElementById('ai-score').textContent = scores.ai;
+                    }
+                    statusDisplay.classList.remove('thinking');
+                    statusDisplay.classList.add('winner');
+                }
+            }
+        }
+
+        // Check for winner
+        function checkWinner() {
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    return { winner: board[a], pattern };
+                }
+            }
+            if (board.every(cell => cell !== '')) {
+                return 'draw';
+            }
+            return null;
+        }
+
+        // Highlight winning cells
+        function highlightWinningCells(pattern) {
+            pattern.forEach(index => {
+                cells[index].classList.add('winning');
+            });
+        }
+
+        // Minimax algorithm for unbeatable AI
+        function minimax(newBoard, player, depth = 0) {
+            const availableMoves = getAvailableMoves(newBoard);
+
+            // Check terminal states
+            const winner = checkWinnerForBoard(newBoard);
+            if (winner === aiPlayer) {
+                return { score: 10 - depth };
+            } else if (winner === humanPlayer) {
+                return { score: depth - 10 };
+            } else if (availableMoves.length === 0) {
+                return { score: 0 };
+            }
+
+            const moves = [];
+
+            for (const move of availableMoves) {
+                const moveInfo = { index: move };
+                newBoard[move] = player;
+
+                if (player === aiPlayer) {
+                    const result = minimax(newBoard, humanPlayer, depth + 1);
+                    moveInfo.score = result.score;
+                } else {
+                    const result = minimax(newBoard, aiPlayer, depth + 1);
+                    moveInfo.score = result.score;
+                }
+
+                newBoard[move] = '';
+                moves.push(moveInfo);
+            }
+
+            // Choose best move
+            let bestMove;
+            if (player === aiPlayer) {
+                let bestScore = -Infinity;
+                for (const move of moves) {
+                    if (move.score > bestScore) {
+                        bestScore = move.score;
+                        bestMove = move;
+                    }
+                }
+            } else {
+                let bestScore = Infinity;
+                for (const move of moves) {
+                    if (move.score < bestScore) {
+                        bestScore = move.score;
+                        bestMove = move;
+                    }
+                }
+            }
+
+            return bestMove;
+        }
+
+        // Get available moves
+        function getAvailableMoves(boardState) {
+            return boardState.reduce((moves, cell, index) => {
+                if (cell === '') moves.push(index);
+                return moves;
+            }, []);
+        }
+
+        // Check winner for a given board state
+        function checkWinnerForBoard(boardState) {
+            for (const pattern of winPatterns) {
+                const [a, b, c] = pattern;
+                if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                    return boardState[a];
+                }
+            }
+            return null;
+        }
+
+        // Make AI move
+        function makeAiMove() {
+            if (!gameActive) return;
+
+            const boardCopy = [...board];
+            const bestMove = minimax(boardCopy, aiPlayer);
+
+            if (bestMove && bestMove.index !== undefined) {
+                makeMove(bestMove.index, aiPlayer);
+                if (gameActive) {
+                    currentPlayer = humanPlayer;
+                    statusDisplay.textContent = 'Your turn';
+                    statusDisplay.classList.remove('thinking');
+                }
+            }
+        }
+
+        // Reset game
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            gameActive = true;
+
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('taken', 'x', 'o', 'winning');
+            });
+
+            statusDisplay.classList.remove('winner', 'draw', 'thinking');
+
+            if (humanPlayer === 'X') {
+                statusDisplay.textContent = 'Your turn';
+            } else {
+                statusDisplay.textContent = 'AI is thinking...';
+                statusDisplay.classList.add('thinking');
+                setTimeout(makeAiMove, 500);
+            }
+        }
+
+        // Start the game
+        init();
+    </script>
+</body>
+</html>
